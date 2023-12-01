@@ -1,0 +1,13 @@
+package com.codecraft.domain.model
+
+import kotlinx.coroutines.flow.Flow
+
+sealed class Resource<T>(
+    val data: T? = null,
+    val message: String? = null,
+    val exception: Exception? = null
+) {
+    class Success<T>(data: T) : Resource<T>(data = data)
+    class Error<T>(errorMessage: String, data: T? = null) : Resource<T>(message = errorMessage, data = data)
+    class Loading<T>(data: T? = null) : Resource<T>(data = data)
+}
