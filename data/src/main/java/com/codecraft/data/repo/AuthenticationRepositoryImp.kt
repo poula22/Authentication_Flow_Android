@@ -13,11 +13,9 @@ import javax.inject.Inject
 class AuthenticationRepositoryImp @Inject constructor(
     private val dataSource: AuthenticationDataSource
 ) : AuthenticationRepository {
-    override suspend fun logIn(email: String, password: String): Resource<UserLogInDomainModel> {
+    override suspend fun logIn(email: String, password: String): UserLogInDomainModel {
         try {
-            return Resource.Success(
-                dataSource.logIn(email = email, password = password)
-            )
+            return dataSource.logIn(email = email, password = password)
         } catch (ex: HttpException) {
             val authException = AuthenticationException.of(ex.code())
             if (authException == null) throw ex
@@ -25,11 +23,9 @@ class AuthenticationRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun logOut(token: String): Resource<UserLogOutDomainModel> {
+    override suspend fun logOut(token: String): UserLogOutDomainModel {
         try {
-            return Resource.Success(
-                dataSource.logOut(token)
-            )
+            return dataSource.logOut(token)
         } catch (ex: HttpException) {
             val authException = AuthenticationException.of(ex.code())
             if (authException == null) throw ex
@@ -41,11 +37,9 @@ class AuthenticationRepositoryImp @Inject constructor(
         name: String,
         email: String,
         password: String
-    ): Resource<UserSignUpDomainModel> {
+    ): UserSignUpDomainModel {
         try {
-            return Resource.Success(
-                dataSource.signUp(name = name, email = email, password = password)
-            )
+            return dataSource.signUp(name = name, email = email, password = password)
         } catch (ex: HttpException) {
             val authException = AuthenticationException.of(ex.code())
             if (authException == null) throw ex

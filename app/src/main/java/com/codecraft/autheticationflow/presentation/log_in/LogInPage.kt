@@ -24,12 +24,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.codecraft.autheticationflow.presentation.comon_component.showAlertDialog
+import com.codecraft.autheticationflow.presentation.comon_component.ShowLogInAlertDialog
 import com.codecraft.autheticationflow.ui.theme.AutheticationFlowTheme
 import com.codecraft.data.api.RetrofitManagerImp
 import com.codecraft.data.data_source.AuthenticationDataSourceImp
 import com.codecraft.data.repo.AuthenticationRepositoryImp
-import com.codecraft.domain.model.Resource
 import com.codecraft.domain.use_case.LogInUseCase
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,23 +83,29 @@ fun LogInPage(modifier: Modifier, viewModel: LogInViewModel = hiltViewModel()) {
             Text(text = "Log in")
         }
     }
-    val sideEffectState=viewModel.logInScreenSideEffect.collectAsState(initial = null)
-    sideEffectState.value?.DoAction()
 
     val screenState = viewModel.logInScreenState.collectAsState(initial = null)
     when (screenState.value) {
-        is Resource.Success -> {
+        is LogInUiState.Success -> {
             // TODO:  navigate to home
         }
 
-        is Resource.Error -> {
-            showAlertDialog(
-                value = screenState.value?.message!!,
-                confirmButtonText = "OK"
-            )
+        is LogInUiState.Error<*> -> {
+            val errorState=(screenState.value as LogInUiState.Error<*>)
+            when (errorState.data){
+                is String->{
+                    ShowLogInAlertDialog(
+                        value = errorState.data,
+                        confirmButtonText = "OK"
+                    )
+                }
+                is LoginSideEffectDialog->{
+                    errorState.data.DoAction()
+                }
+            }
         }
 
-        is Resource.Loading -> {
+        is LogInUiState.Loading -> {
            Box(modifier = modifier.fillMaxWidth()){
                CircularProgressIndicator(modifier = modifier.align(Alignment.Center))
            }
@@ -109,55 +114,6 @@ fun LogInPage(modifier: Modifier, viewModel: LogInViewModel = hiltViewModel()) {
     }
 }
 
-
-/*
-* is Resource.CustomException -> {
-            when (screenState.value?.exception) {
-                is AuthenticationException -> {
-                    val e = (screenState.value?.exception as AuthenticationException).authException
-                    when (e) {
-                        AuthenticationException.AuthenticationExceptionType.USER_NOT_FOUND -> {
-                            showAlertDialog(
-                                value = e.errorMessage,
-                                confirmButtonClick = {
-                                    // TODO: Navigate to sign up
-                                },
-                                confirmButtonText = "sign up",
-                                hasDismissButton = true,
-                                dismissButtonText = "cancel",
-                                dismissButtonClick = {}
-                            )
-                        }
-
-                        AuthenticationException.AuthenticationExceptionType.UNVERIFIED_EMAIL -> {
-                            showAlertDialog(
-                                value = e.errorMessage,
-                                confirmButtonClick = {
-                                    // TODO: Navigate to verification
-                                },
-                                confirmButtonText = "verify now",
-                                hasDismissButton = true,
-                                dismissButtonText = "cancel",
-                                dismissButtonClick = {}
-                            )
-                        }
-
-                        AuthenticationException.AuthenticationExceptionType.UNKNOWN_ERROR -> {
-                            showAlertDialog(
-                                value = e.errorMessage,
-                                confirmButtonText = "Ok"
-                            )
-                        }
-                    }
-
-                }
-
-                else -> {
-                    showAlertDialog(value = "Something went wrong", confirmButtonText = "Ok")
-                }
-            }
-        }
-* */
 @Preview(showBackground = true)
 @Composable
 fun LogInPreview() {

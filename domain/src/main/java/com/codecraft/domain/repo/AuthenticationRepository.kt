@@ -6,7 +6,7 @@ import com.codecraft.domain.model.user.UserLogOutDomainModel
 import com.codecraft.domain.model.user.UserSignUpDomainModel
 
 interface AuthenticationRepository {
-    suspend fun logIn(email:String,password:String):Resource<UserLogInDomainModel>
-    suspend fun logOut(token:String):Resource<UserLogOutDomainModel>
-    suspend fun signUp(name:String,email: String,password: String):Resource<UserSignUpDomainModel>
+    suspend fun logIn(email:String,password:String):UserLogInDomainModel
+    suspend fun logOut(token:String):UserLogOutDomainModel
+    suspend fun signUp(name:String,email: String,password: String):UserSignUpDomainModel
 }

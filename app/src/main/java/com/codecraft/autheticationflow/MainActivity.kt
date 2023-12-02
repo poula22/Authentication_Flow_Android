@@ -6,15 +6,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.codecraft.MyApplication
 import com.codecraft.autheticationflow.navigation.AppNavigation
-import com.codecraft.autheticationflow.presentation.comon_component.showAlertDialog
+import com.codecraft.autheticationflow.presentation.comon_component.ShowLogInAlertDialog
 import com.codecraft.autheticationflow.ui.theme.AutheticationFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     when(networkState.value){
                         true->{AppNavigation()}
                         false->{
-                            showAlertDialog(value = "Network Error", confirmButtonText = "retry")
+                            ShowLogInAlertDialog(value = "Network Error", confirmButtonText = "retry")
                         }
                     }
                 }
