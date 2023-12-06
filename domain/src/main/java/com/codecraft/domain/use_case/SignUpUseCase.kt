@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 class SignUpUseCase @Inject constructor(private val repository: AuthenticationRepository){
-    fun invoke(name: String,password:String,email:String) = flow {
+    operator fun invoke(name: String,password:String,email:String) = flow {
         emit(repository.signUp(name, email, password))
     }.asResult()
 }

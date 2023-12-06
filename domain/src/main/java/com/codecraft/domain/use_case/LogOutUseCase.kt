@@ -9,5 +9,5 @@ import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 class LogOutUseCase @Inject constructor(private val repository: AuthenticationRepository) {
-    fun invoke(token: String) = flow { emit(repository.logOut(token)) }.asResult()
+    operator fun invoke(token: String) = flow { emit(repository.logOut(token)) }.asResult()
 }
